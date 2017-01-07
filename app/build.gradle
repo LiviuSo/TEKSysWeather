@@ -39,4 +39,7 @@ dependencies {
     // ButterKnife
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    // Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

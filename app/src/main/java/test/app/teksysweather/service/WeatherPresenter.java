@@ -1,16 +1,22 @@
 package test.app.teksysweather.service;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
 import test.app.teksysweather.model.WeatherModel;
 
+import static test.app.teksysweather.util.Constants.ICON_BASE_URL;
+
 /**
  * Formats and sends data to the views
  */
 public class WeatherPresenter {
+
     private WeatherModel currentWeather;
 
     public WeatherPresenter(WeatherModel weatherModel) {
@@ -23,6 +29,21 @@ public class WeatherPresenter {
 
     public void setCurrentWeather(WeatherModel weatherModel) {
         this.currentWeather = weatherModel;
+    }
+
+    public void showIcon(ImageView iconIv) {
+        if(currentWeather.weather == null || currentWeather.weather.size() == 0) {
+            return;
+        }
+        String iconURL = String.format("%s%s.png", ICON_BASE_URL, currentWeather.weather.get(0).icon);
+        Picasso.with(iconIv.getContext()).load(iconURL).resize(100, 100).into(iconIv);
+    }
+
+    public void showDescription(TextView descrTv) {
+        if(currentWeather.weather == null || currentWeather.weather.size() == 0) {
+            return;
+        }
+        descrTv.setText(String.format(Locale.getDefault(), "%s", currentWeather.weather.get(0).description));
     }
 
     public void showLocation(TextView cityTv, TextView countryTv) {
