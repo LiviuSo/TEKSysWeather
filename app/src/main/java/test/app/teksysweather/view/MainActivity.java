@@ -1,15 +1,21 @@
 package test.app.teksysweather.view;
 
 import android.content.DialogInterface;
-import android.support.design.widget.FloatingActionButton;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPressureShown;
     private boolean isSunriseShown;
     private boolean isSunsetShown;
-    private String units;
-    private String cityName;
+    private String  units;
+    private String  cityName;
 
     @BindView(R.id.weatherRainContainer) protected     LinearLayout rainLl;
     @BindView(R.id.weatherSnowContainer) protected     LinearLayout snowLl;
@@ -61,19 +67,25 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.weatherTempTv) protected    TextView tempTv;
     @BindView(R.id.weatherTempMaxTv) protected TextView tempMaxTv;
 
-    @BindView(R.id.weatherRainTv) protected     TextView             rainTv;
-    @BindView(R.id.weatherSnowTv) protected     TextView             snowTv;
-    @BindView(R.id.weatherWindTv) protected     TextView             windTv;
-    @BindView(R.id.weatherCloudsTv) protected   TextView             cloudsTv;
-    @BindView(R.id.weatherPressureTV) protected TextView             pressureTv;
-    @BindView(R.id.weatherHumidityTv) protected TextView             humidityTv;
-    @BindView(R.id.weatherSunriseTv) protected  TextView             sunriseTv;
-    @BindView(R.id.weatherSunsetTv) protected   TextView             sunsetTv;
+    @BindView(R.id.weatherRainTv) protected     TextView rainTv;
+    @BindView(R.id.weatherSnowTv) protected     TextView snowTv;
+    @BindView(R.id.weatherWindTv) protected     TextView windTv;
+    @BindView(R.id.weatherCloudsTv) protected   TextView cloudsTv;
+    @BindView(R.id.weatherPressureTV) protected TextView pressureTv;
+    @BindView(R.id.weatherHumidityTv) protected TextView humidityTv;
+    @BindView(R.id.weatherSunriseTv) protected  TextView sunriseTv;
+    @BindView(R.id.weatherSunsetTv) protected   TextView sunsetTv;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("Current Weather");
+        }
 
         // init ButterKnife
         ButterKnife.bind(this);
@@ -89,13 +101,40 @@ public class MainActivity extends AppCompatActivity {
         fetchData();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int actId = item.getItemId();
+
+        switch (actId) {
+            case R.id.weatherMap:
+                showLocation();
+                break;
+            case R.id.weatherRefresh:
+                fetchData();
+                break;
+            case R.id.weatherSetting:
+                Log.v(LOG_TAG, "settings");
+//                Intent intent = new Intent(this, SettingsActivity.class);
+//                startActivity(intent);
+                break;
+            default: return false;
+        }
+
+        return true;
+    }
+
     @OnClick(R.id.weatherNewCity)
-    public void enterNewCity() {
+    public void onEnterNewCity() {
         Log.v(LOG_TAG, "new city");
         // launch an edit dialog
         launchEditDialog();
-
-        // upon capturing the new city name, fetch the data
     }
 
     private void launchEditDialog() {
@@ -182,4 +221,22 @@ public class MainActivity extends AppCompatActivity {
         // show sunset
         weatherPresenter.showSunset(sunsetTv, isSunsetShown);
     }
+
+    private void showLocation() {
+        String latLon = String.format(Locale.getDefault(),
+                                      "%f,%f(%s)",
+                                      currentWeather.coord.lat, currentWeather.coord.lon, currentWeather.name);
+        Uri uri = Uri.parse("geo:0,0").buildUpon()
+                .appendQueryParameter("q", latLon)
+                .build();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        // test if any app can handle the intent & show the location
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Log.e(LOG_TAG, "No activity to show the map");
+        }
+    }
+
 }

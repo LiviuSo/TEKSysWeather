@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/weatherRefresh"
+        android:title="Refresh"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/weatherMap"
+        android:title="Map"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/weatherSetting"
+        android:title="Settings"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+</menu>
