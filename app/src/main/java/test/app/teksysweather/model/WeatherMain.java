@@ -21,4 +21,10 @@ public class WeatherMain {
 
     @SerializedName("temp_max") @Expose
     public double temp_max;
+
+    @SerializedName("sea_level") @Expose
+    public double seaLevel;
+
+    @SerializedName("grnd_level") @Expose
+    public double grndLevel;
 }

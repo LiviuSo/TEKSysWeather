@@ -17,8 +17,8 @@ public class WeatherModel {
     @SerializedName("weather") @Expose
     public List<Weather> weather;
 
-    @SerializedName("base") @Expose
-    public String base;
+//    @SerializedName("base") @Expose
+//    public String base;
 
     @SerializedName("main") @Expose
     public WeatherMain main;
@@ -32,6 +32,12 @@ public class WeatherModel {
     @SerializedName("clouds") @Expose
     public Clouds clouds;
 
+    @SerializedName("rain") @Expose
+    public Precipitation rain;
+
+    @SerializedName("snow") @Expose
+    public Precipitation snow;
+
     @SerializedName("dt") @Expose
     public int dt;
 
@@ -44,6 +50,6 @@ public class WeatherModel {
     @SerializedName("name") @Expose
     public String name;
 
-    @SerializedName("cod") @Expose
-    public String cod;
+//    @SerializedName("cod") @Expose
+//    public String cod;
 }
