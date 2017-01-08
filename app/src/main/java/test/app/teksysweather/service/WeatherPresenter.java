@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.util.Calendar;
 import java.util.Locale;
 
 import test.app.teksysweather.R;
@@ -27,10 +26,6 @@ import static test.app.teksysweather.util.Constants.ICON_BASE_URL;
 public class WeatherPresenter {
 
     private WeatherModel currentWeather;
-
-    public WeatherPresenter(WeatherModel weatherModel) {
-        this.currentWeather = weatherModel;
-    }
 
     public WeatherPresenter() {
     }
@@ -48,9 +43,11 @@ public class WeatherPresenter {
             return;
         }
         String iconURL = String.format("%s%s.png", ICON_BASE_URL, currentWeather.weather.get(0).icon);
+        int width = (int) iconIv.getContext().getResources().getDimension(R.dimen.icon_width);
+        int height = (int) iconIv.getContext().getResources().getDimension(R.dimen.icon_height);
         Picasso.with(iconIv.getContext())
                 .load(iconURL)
-                .resize(100, 100)
+                .resize(width, height)
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder).
                 into(iconIv);
@@ -68,9 +65,10 @@ public class WeatherPresenter {
         countryTv.setText(currentWeather.sys.country);
     }
 
-    public void showTime(TextView hourTv, TextView dateTv) {
-        dateTv.setText(Utilities.getDate(currentWeather.dt * 1000) + Utilities.getDayName(dateTv.getContext(), currentWeather.dt * 1000));
+    public void showTime(TextView hourTv, TextView dateTv, TextView dayTv) {
         hourTv.setText(Utilities.getHour(currentWeather.dt * 1000));
+        dateTv.setText(Utilities.getDate(currentWeather.dt * 1000));
+        dayTv.setText(Utilities.getDayName(dateTv.getContext(), currentWeather.dt * 1000));
     }
 
     public void showTemperature(TextView tempMinTv, TextView tempTv, TextView tempMaxTv, boolean isMetric) {

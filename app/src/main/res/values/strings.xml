@@ -36,5 +36,27 @@
     <string name="thursday">Thursday</string>
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
+    <string name="error_city_not_found">City not found</string>
+    <string name="warning_offline">You\'re offline</string>
+    <string name="dialog_new_city_title">City name</string>
+    <string name="dialog_new_city_ok">OK</string>
+    <string name="dialog_new_city_cancel">Cancel</string>
+    <string name="city">City</string>
+    <string name="country">Country</string>
+    <string name="description">Description</string>
+    <string name="hour">Hour</string>
+    <string name="date">Date</string>
+    <string name="day">Day</string>
+    <string name="temp_min">Temp Min</string>
+    <string name="temp">Temp</string>
+    <string name="temp_max">Temp Max</string>
+    <string name="rain">Rain</string>
+    <string name="snow">Snow</string>
+    <string name="wind">Wind</string>
+    <string name="clouds">Clouds</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
 
 </resources>

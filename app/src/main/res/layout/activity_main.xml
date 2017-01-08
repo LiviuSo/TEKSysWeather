@@ -34,48 +34,55 @@
                     android:id="@+id/weatherCityTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:hint="City"/>
+                    android:layout_marginEnd="@dimen/margin_end"
+                    android:hint="@string/city"/>
 
                 <TextView
                     android:id="@+id/weatherCountryTv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Country"/>
+                    android:hint="@string/country"/>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/weatherDescriptionTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Description"/>
+                android:hint="@string/description"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/weatherDateIconDescrContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/margin_top"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="@dimen/margin_end"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/weatherHourTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Hour"/>
+                    android:hint="@string/hour"/>
 
                 <TextView
                     android:id="@+id/weatherDateTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Date"/>
+                    android:hint="@string/date"/>
+
+                <TextView
+                    android:id="@+id/weatherDayTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/day"/>
+
 
             </LinearLayout>
 
@@ -87,13 +94,13 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="@dimen/margin_end"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/weatherIcon"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="@dimen/icon_width"
+                    android:layout_height="@dimen/icon_height"
                     android:contentDescription="weather icon"/>
 
                 <LinearLayout
@@ -106,19 +113,19 @@
                         android:id="@+id/weatherTempMinTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Temp Min"/>
+                        android:hint="@string/temp_min"/>
 
                     <TextView
                         android:id="@+id/weatherTempTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Temp"/>
+                        android:hint="@string/temp"/>
 
                     <TextView
                         android:id="@+id/weatherTempMaxTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Temp Max"/>
+                        android:hint="@string/temp_max"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -137,70 +144,70 @@
                     android:id="@+id/weatherRainContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_top"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/weatherRainTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Rain"/>
+                        android:hint="@string/rain"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/weatherSnowContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_top"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/weatherSnowTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Snow"/>
+                        android:hint="@string/snow"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/weatherWindContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_top"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/weatherWindTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Wind"/>
+                        android:hint="@string/wind"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/weatherCloudsContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_top"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/weatherCloudsTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Clouds"/>
+                        android:hint="@string/clouds"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/weatherHumidityContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_top"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/weatherHumidityTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Humidity"/>
+                        android:hint="@string/humidity"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -214,35 +221,35 @@
                         android:id="@+id/weatherPressureTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Pressure"/>
+                        android:hint="@string/pressure"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/weatherSunriseContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_top"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/weatherSunriseTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Sunrise"/>
+                        android:hint="@string/sunrise"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/weatherSunsetContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_top"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/weatherSunsetTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Sunset"/>
+                        android:hint="@string/sunset"/>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
@@ -256,7 +263,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="20dp"
         android:elevation="10dp"
-        android:src="@drawable/ic_search_black_24dp"
+        app:srcCompat="@drawable/ic_search_black_24dp"
         app:layout_anchorGravity="bottom|end|right"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.weatherHumidityTv) protected TextView humidityTv;
     @BindView(R.id.weatherSunriseTv) protected  TextView sunriseTv;
     @BindView(R.id.weatherSunsetTv) protected   TextView sunsetTv;
+    @BindView(R.id.weatherDayTv) protected TextView dayTv;
 
 
     @Override
@@ -136,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
                 fetchData();
                 break;
             case R.id.weatherSetting:
-                Log.v(LOG_TAG, "settings");
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
@@ -155,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.weatherNewCity)
     public void onEnterNewCity() {
-        Log.v(LOG_TAG, "new city");
         // launch an edit dialog
         launchEditDialog();
     }
@@ -164,9 +163,9 @@ public class MainActivity extends AppCompatActivity {
         final EditText editText = new EditText(MainActivity.this);
 
         new AlertDialog.Builder(this)
-                .setTitle("City name")
+                .setTitle(R.string.dialog_new_city_title)
                 .setView(editText)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_new_city_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         cityName = editText.getText().toString();
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         fetchData();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.dialog_new_city_cancel , new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -187,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     public void fetchData() {
         if (!Utilities.isNetworkAvailable(this)) {
             populateViews(); // populate view using the model loaded offline
-            Snackbar.make(parentView, "You're offline", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(parentView, R.string.warning_offline, Snackbar.LENGTH_LONG).show();
         } else {
             CurrentWeatherServiceProvider.getInstance(BASE_URL)
                     .getCurrentWeatherService()
@@ -198,24 +197,21 @@ public class MainActivity extends AppCompatActivity {
                             if (response.code() == 200) {
                                 currentWeather = response.body();
                                 weatherPresenter.setCurrentWeather(currentWeather);
-                                Log.v(LOG_TAG, "retrofit success!");
                                 populateViews(); // populate the view using the model fetched from remote
                             } else {
-                                Snackbar.make(parentView, "Some error occurred", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(parentView, R.string.error_city_not_found, Snackbar.LENGTH_LONG).show();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<WeatherModel> call, Throwable t) {
-                            Log.d(LOG_TAG, "retrofit failure", t);
-                            Snackbar.make(parentView, "Some error occurred", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(parentView, R.string.error_city_not_found, Snackbar.LENGTH_LONG).show();
                         }
                     });
         }
     }
 
     private void populateViews() {
-        Log.v(LOG_TAG, "populateViews()");
         // show icon
         weatherPresenter.showIcon(iconIv);
         // show location
@@ -223,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         // show description
         weatherPresenter.showDescription(descriptionTv);
         // show hour/date
-        weatherPresenter.showTime(hourTv, dateTv);
+        weatherPresenter.showTime(hourTv, dateTv, dayTv);
         // show temp
         weatherPresenter.showTemperature(tempMinTv, tempTv, tempMaxTv, Utilities.isMetric(this));
         // show rain (if available)
