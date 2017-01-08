@@ -39,7 +39,7 @@ public class WeatherModel {
     public Precipitation snow;
 
     @SerializedName("dt") @Expose
-    public int dt;
+    public long dt;
 
     @SerializedName("sys") @Expose
     public Sys sys;

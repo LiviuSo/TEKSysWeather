@@ -103,16 +103,16 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/weatherTempTv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Temp"/>
-
-                    <TextView
                         android:id="@+id/weatherTempMinTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Temp Min"/>
+
+                    <TextView
+                        android:id="@+id/weatherTempTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Temp"/>
 
                     <TextView
                         android:id="@+id/weatherTempMaxTv"

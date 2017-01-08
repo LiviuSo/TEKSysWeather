@@ -11,11 +11,13 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 import test.app.teksysweather.R;
 import test.app.teksysweather.model.WeatherModel;
 import test.app.teksysweather.util.Constants;
+import test.app.teksysweather.util.Utilities;
 
 import static test.app.teksysweather.util.Constants.ICON_BASE_URL;
 
@@ -42,7 +44,7 @@ public class WeatherPresenter {
     }
 
     public void showIcon(ImageView iconIv) {
-        if(currentWeather.weather == null || currentWeather.weather.size() == 0) {
+        if (currentWeather.weather == null || currentWeather.weather.size() == 0) {
             return;
         }
         String iconURL = String.format("%s%s.png", ICON_BASE_URL, currentWeather.weather.get(0).icon);
@@ -55,10 +57,10 @@ public class WeatherPresenter {
     }
 
     public void showDescription(TextView descrTv) {
-        if(currentWeather.weather == null || currentWeather.weather.size() == 0) {
+        if (currentWeather.weather == null || currentWeather.weather.size() == 0) {
             return;
         }
-        descrTv.setText(String.format(Locale.getDefault(), "%s", currentWeather.weather.get(0).description));
+        descrTv.setText(Utilities.capitalizeFirstLetter(currentWeather.weather.get(0).description));
     }
 
     public void showLocation(TextView cityTv, TextView countryTv) {
@@ -67,29 +69,37 @@ public class WeatherPresenter {
     }
 
     public void showTime(TextView hourTv, TextView dateTv) {
-        hourTv.setText(String.format(Locale.getDefault(), "%d", currentWeather.dt)); // TODO: 1/7/2017 util to extract time/date
-        dateTv.setText(String.format(Locale.getDefault(), "%d", currentWeather.dt));
+        dateTv.setText(Utilities.getDate(currentWeather.dt * 1000) + Utilities.getDayName(dateTv.getContext(), currentWeather.dt * 1000));
+        hourTv.setText(Utilities.getHour(currentWeather.dt * 1000));
     }
 
-    public void showTemperature(TextView tempMinTv, TextView tempTv, TextView tempMaxTv) {
-        tempMinTv.setText(String.format(Locale.getDefault(), "%.2f", currentWeather.main.temp_min));
-        tempTv.setText(String.format(Locale.getDefault(), "%.2f", currentWeather.main.temp));
-        tempMaxTv.setText(String.format(Locale.getDefault(), "%.2f", currentWeather.main.temp_max));
+    public void showTemperature(TextView tempMinTv, TextView tempTv, TextView tempMaxTv, boolean isMetric) {
+        Context context = tempMinTv.getContext();
+        tempMinTv.setText(Utilities.formatTemperature(context, currentWeather.main.temp_min, isMetric));
+        tempTv.setText(Utilities.formatTemperature(context, currentWeather.main.temp, isMetric));
+        tempMaxTv.setText(Utilities.formatTemperature(context, currentWeather.main.temp_max, isMetric));
     }
 
-    public void showRain(TextView rainTv) {
+    public void showRain(TextView rainTv, boolean isMetric) {
         if (currentWeather.rain != null) {
             rainTv.setVisibility(View.VISIBLE);
-            rainTv.setText(String.format(Locale.getDefault(), "%.2f", currentWeather.rain.threeHours));
+            Context context = rainTv.getContext();
+            String unit = isMetric ? context.getString(R.string.millimeter) : context.getString(R.string.inch);
+            double quantity = isMetric ? currentWeather.rain.threeHours : 0.0393701 * currentWeather.rain.threeHours;
+            rainTv.setText(String.format(Locale.getDefault(), "%.1f %s", quantity, unit));
+
         } else {
             rainTv.setVisibility(View.GONE);
         }
     }
 
-    public void showSnow(TextView snowTv) {
+    public void showSnow(TextView snowTv, boolean isMetric) {
         if (currentWeather.snow != null) {
             snowTv.setVisibility(View.VISIBLE);
-            snowTv.setText(String.format(Locale.getDefault(), "%.2f", currentWeather.snow.threeHours));
+            Context context = snowTv.getContext();
+            String unit = isMetric ? context.getString(R.string.millimeter) : context.getString(R.string.inch);
+            double quantity = isMetric ? currentWeather.rain.threeHours : 0.0393701 * currentWeather.rain.threeHours;
+            snowTv.setText(String.format(Locale.getDefault(), "%.1f %s", quantity, unit));
         } else {
             snowTv.setVisibility(View.GONE);
         }
@@ -98,7 +108,7 @@ public class WeatherPresenter {
     public void showWind(TextView windTv, boolean isWindShown) {
         if (isWindShown && currentWeather.wind != null) {
             windTv.setVisibility(View.VISIBLE);
-            windTv.setText(String.format(Locale.getDefault(), "%.2f %d", currentWeather.wind.speed, currentWeather.wind.deg));
+            windTv.setText(Utilities.getFormattedWind(windTv.getContext(), currentWeather.wind.speed, currentWeather.wind.deg));
         } else {
             windTv.setVisibility(View.GONE);
         }
@@ -116,7 +126,7 @@ public class WeatherPresenter {
     public void showPressure(TextView pressureTv, boolean isPressureShown) {
         if (isPressureShown && currentWeather != null && currentWeather.main != null) {
             pressureTv.setVisibility(View.VISIBLE);
-            pressureTv.setText(String.format(Locale.getDefault(), "%d", currentWeather.main.pressure));
+            pressureTv.setText(String.format(Locale.getDefault(), "%d hPa", currentWeather.main.pressure));
         } else {
             pressureTv.setVisibility(View.GONE);
         }
@@ -125,7 +135,7 @@ public class WeatherPresenter {
     public void showHumidity(TextView humidityTv, boolean isHumidityShown) {
         if (isHumidityShown && currentWeather.main != null) {
             humidityTv.setVisibility(View.VISIBLE);
-            humidityTv.setText(String.format(Locale.getDefault(), "%d", currentWeather.main.humidity));
+            humidityTv.setText(String.format(Locale.getDefault(), "%d%%", currentWeather.main.humidity));
         } else {
             humidityTv.setVisibility(View.GONE);
         }
@@ -134,7 +144,7 @@ public class WeatherPresenter {
     public void showSunrise(TextView sunriseTv, boolean isSunriseShown) {
         if (isSunriseShown && currentWeather.sys != null) {
             sunriseTv.setVisibility(View.VISIBLE);
-            sunriseTv.setText(String.format(Locale.getDefault(), "%d", currentWeather.sys.sunrise));
+            sunriseTv.setText(Utilities.getHour(currentWeather.sys.sunrise * 1000));
         } else {
             sunriseTv.setVisibility(View.GONE);
         }
@@ -143,7 +153,7 @@ public class WeatherPresenter {
     public void showSunset(TextView sunsetTv, boolean isSunsetShown) {
         if (isSunsetShown && currentWeather.sys != null) {
             sunsetTv.setVisibility(View.VISIBLE);
-            sunsetTv.setText(String.format(Locale.getDefault(), "%d", currentWeather.sys.sunset));
+            sunsetTv.setText(Utilities.getHour(currentWeather.sys.sunset * 1000));
         } else {
             sunsetTv.setVisibility(View.GONE);
         }
@@ -153,7 +163,6 @@ public class WeatherPresenter {
         // 'serialize' the model
         Gson gson = new Gson();
         String modelAsString = gson.toJson(currentWeather);
-//        SharedPreferences sharedPref = context.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(Constants.SHARED_PREF_WEATHER_MODEL, modelAsString);
@@ -163,10 +172,9 @@ public class WeatherPresenter {
     public WeatherModel loadModelFromSharedPref(Activity context) {
         // 'deserialize' the model
         Gson gson = new Gson();
-//        SharedPreferences sharedPref = context.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String currentWeatherAsString = sharedPref.getString(Constants.SHARED_PREF_WEATHER_MODEL, "");
-        if(!currentWeatherAsString.equals("")) {
+        if (!currentWeatherAsString.equals("")) {
             currentWeather = gson.fromJson(currentWeatherAsString, WeatherModel.class);
         }
         return currentWeather;

@@ -9,4 +9,14 @@
         <item>@string/pref_unit_metric</item>
         <item>@string/pref_unit_imperial</item>
     </string-array>
+
+    <string-array name="weekdays">
+        <item>@string/sunday</item>
+        <item>@string/monday</item>
+        <item>@string/tuesday</item>
+        <item>@string/wednesday</item>
+        <item>@string/thursday</item>
+        <item>@string/friday</item>
+        <item>@string/saturday</item>
+    </string-array>
 </resources>

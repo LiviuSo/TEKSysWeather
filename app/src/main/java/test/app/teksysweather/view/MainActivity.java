@@ -225,11 +225,11 @@ public class MainActivity extends AppCompatActivity {
         // show hour/date
         weatherPresenter.showTime(hourTv, dateTv);
         // show temp
-        weatherPresenter.showTemperature(tempMinTv, tempTv, tempMaxTv);
+        weatherPresenter.showTemperature(tempMinTv, tempTv, tempMaxTv, Utilities.isMetric(this));
         // show rain (if available)
-        weatherPresenter.showRain(rainTv);
+        weatherPresenter.showRain(rainTv, Utilities.isMetric(this));
         // show snow
-        weatherPresenter.showSnow(snowTv);
+        weatherPresenter.showSnow(snowTv, Utilities.isMetric(this));
         // show wind
         weatherPresenter.showWind(windTv, isWindShown);
         // show clouds
