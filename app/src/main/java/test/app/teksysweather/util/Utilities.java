@@ -91,10 +91,19 @@ public class Utilities {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
 
-        return String.format(Locale.getDefault(), "%d:%d %s",
+        return String.format(Locale.getDefault(), "%d:%d",
                              calendar.get(Calendar.HOUR),
+                             calendar.get(Calendar.MINUTE));
+    }
+
+    public static String getHour24(long milliseconds) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliseconds);
+
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d",
+                             calendar.get(Calendar.HOUR_OF_DAY),
                              calendar.get(Calendar.MINUTE),
-                             getAmPm(milliseconds));
+                             calendar.get(Calendar.SECOND));
     }
 
     public static String getDate(long milliseconds) {

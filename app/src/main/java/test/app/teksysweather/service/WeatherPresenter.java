@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -65,8 +66,9 @@ public class WeatherPresenter {
         countryTv.setText(currentWeather.sys.country);
     }
 
-    public void showTime(TextView hourTv, TextView dateTv, TextView dayTv) {
+    public void showTime(TextView hourTv, TextView amPmTv, TextView dateTv, TextView dayTv) {
         hourTv.setText(Utilities.getHour(currentWeather.dt * 1000));
+        amPmTv.setText(Utilities.getAmPm(currentWeather.dt * 1000));
         dateTv.setText(Utilities.getDate(currentWeather.dt * 1000));
         dayTv.setText(Utilities.getDayName(dateTv.getContext(), currentWeather.dt * 1000));
     }
@@ -78,82 +80,82 @@ public class WeatherPresenter {
         tempMaxTv.setText(Utilities.formatTemperature(context, currentWeather.main.temp_max, isMetric));
     }
 
-    public void showRain(TextView rainTv, boolean isMetric) {
+    public void showRain(LinearLayout container, TextView rainTv, boolean isMetric) {
         if (currentWeather.rain != null) {
-            rainTv.setVisibility(View.VISIBLE);
+            container.setVisibility(View.VISIBLE);
             Context context = rainTv.getContext();
             String unit = isMetric ? context.getString(R.string.millimeter) : context.getString(R.string.inch);
             double quantity = isMetric ? currentWeather.rain.threeHours : 0.0393701 * currentWeather.rain.threeHours;
             rainTv.setText(String.format(Locale.getDefault(), "%.1f %s", quantity, unit));
 
         } else {
-            rainTv.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
         }
     }
 
-    public void showSnow(TextView snowTv, boolean isMetric) {
+    public void showSnow(LinearLayout container, TextView snowTv, boolean isMetric) {
         if (currentWeather.snow != null) {
-            snowTv.setVisibility(View.VISIBLE);
+            container.setVisibility(View.VISIBLE);
             Context context = snowTv.getContext();
             String unit = isMetric ? context.getString(R.string.millimeter) : context.getString(R.string.inch);
             double quantity = isMetric ? currentWeather.rain.threeHours : 0.0393701 * currentWeather.rain.threeHours;
             snowTv.setText(String.format(Locale.getDefault(), "%.1f %s", quantity, unit));
         } else {
-            snowTv.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
         }
     }
 
-    public void showWind(TextView windTv, boolean isWindShown) {
+    public void showWind(LinearLayout container, TextView windTv, boolean isWindShown) {
         if (isWindShown && currentWeather.wind != null) {
-            windTv.setVisibility(View.VISIBLE);
+            container.setVisibility(View.VISIBLE);
             windTv.setText(Utilities.getFormattedWind(windTv.getContext(), currentWeather.wind.speed, currentWeather.wind.deg));
         } else {
-            windTv.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
         }
     }
 
-    public void showClouds(TextView cloudsTv, boolean isCloudsShown) {
+    public void showClouds(LinearLayout container, TextView cloudsTv, boolean isCloudsShown) {
         if (isCloudsShown && currentWeather.clouds != null) {
-            cloudsTv.setVisibility(View.VISIBLE);
+            container.setVisibility(View.VISIBLE);
             cloudsTv.setText(String.format(Locale.getDefault(), "%d%%", currentWeather.clouds.all));
         } else {
-            cloudsTv.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
         }
     }
 
-    public void showPressure(TextView pressureTv, boolean isPressureShown) {
+    public void showPressure(LinearLayout container, TextView pressureTv, boolean isPressureShown) {
         if (isPressureShown && currentWeather != null && currentWeather.main != null) {
-            pressureTv.setVisibility(View.VISIBLE);
+            container.setVisibility(View.VISIBLE);
             pressureTv.setText(String.format(Locale.getDefault(), "%d hPa", currentWeather.main.pressure));
         } else {
-            pressureTv.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
         }
     }
 
-    public void showHumidity(TextView humidityTv, boolean isHumidityShown) {
+    public void showHumidity(LinearLayout container, TextView humidityTv, boolean isHumidityShown) {
         if (isHumidityShown && currentWeather.main != null) {
-            humidityTv.setVisibility(View.VISIBLE);
+            container.setVisibility(View.VISIBLE);
             humidityTv.setText(String.format(Locale.getDefault(), "%d%%", currentWeather.main.humidity));
         } else {
-            humidityTv.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
         }
     }
 
-    public void showSunrise(TextView sunriseTv, boolean isSunriseShown) {
+    public void showSunrise(LinearLayout container, TextView sunriseTv, boolean isSunriseShown) {
         if (isSunriseShown && currentWeather.sys != null) {
-            sunriseTv.setVisibility(View.VISIBLE);
-            sunriseTv.setText(Utilities.getHour(currentWeather.sys.sunrise * 1000));
+            container.setVisibility(View.VISIBLE);
+            sunriseTv.setText(Utilities.getHour24(currentWeather.sys.sunrise * 1000));
         } else {
-            sunriseTv.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
         }
     }
 
-    public void showSunset(TextView sunsetTv, boolean isSunsetShown) {
+    public void showSunset(LinearLayout container, TextView sunsetTv, boolean isSunsetShown) {
         if (isSunsetShown && currentWeather.sys != null) {
-            sunsetTv.setVisibility(View.VISIBLE);
-            sunsetTv.setText(Utilities.getHour(currentWeather.sys.sunset * 1000));
+            container.setVisibility(View.VISIBLE);
+            sunsetTv.setText(Utilities.getHour24(currentWeather.sys.sunset * 1000));
         } else {
-            sunsetTv.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
         }
     }
 

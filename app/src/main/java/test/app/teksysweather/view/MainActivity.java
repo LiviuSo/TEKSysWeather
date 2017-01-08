@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.weatherHumidityTv) protected TextView humidityTv;
     @BindView(R.id.weatherSunriseTv) protected  TextView sunriseTv;
     @BindView(R.id.weatherSunsetTv) protected   TextView sunsetTv;
-    @BindView(R.id.weatherDayTv) protected TextView dayTv;
+    @BindView(R.id.weatherDayTv) protected      TextView dayTv;
+    @BindView(R.id.weatherAmPmTv) protected     TextView amPmTv;
 
 
     @Override
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readSettings() {
-        if(Utilities.isMetric(this)) {
+        if (Utilities.isMetric(this)) {
             units = getString(R.string.pref_unit_metric);
         } else {
             units = getString(R.string.pref_unit_imperial);
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                         fetchData();
                     }
                 })
-                .setNegativeButton(R.string.dialog_new_city_cancel , new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.dialog_new_city_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -219,25 +220,25 @@ public class MainActivity extends AppCompatActivity {
         // show description
         weatherPresenter.showDescription(descriptionTv);
         // show hour/date
-        weatherPresenter.showTime(hourTv, dateTv, dayTv);
+        weatherPresenter.showTime(hourTv, amPmTv, dateTv, dayTv);
         // show temp
         weatherPresenter.showTemperature(tempMinTv, tempTv, tempMaxTv, Utilities.isMetric(this));
         // show rain (if available)
-        weatherPresenter.showRain(rainTv, Utilities.isMetric(this));
+        weatherPresenter.showRain(rainLl, rainTv, Utilities.isMetric(this));
         // show snow
-        weatherPresenter.showSnow(snowTv, Utilities.isMetric(this));
+        weatherPresenter.showSnow(snowLl, snowTv, Utilities.isMetric(this));
         // show wind
-        weatherPresenter.showWind(windTv, isWindShown);
+        weatherPresenter.showWind(windLl, windTv, isWindShown);
         // show clouds
-        weatherPresenter.showClouds(cloudsTv, isCloudsShown);
+        weatherPresenter.showClouds(cloudsLl, cloudsTv, isCloudsShown);
         // show pressure
-        weatherPresenter.showPressure(pressureTv, isPressureShown);
+        weatherPresenter.showPressure(pressureLl, pressureTv, isPressureShown);
         // show humidity
-        weatherPresenter.showHumidity(humidityTv, isHumidityShown);
+        weatherPresenter.showHumidity(humidityLl, humidityTv, isHumidityShown);
         // show sunrise
-        weatherPresenter.showSunrise(sunriseTv, isSunriseShown);
+        weatherPresenter.showSunrise(sunriseLl, sunriseTv, isSunriseShown);
         // show sunset
-        weatherPresenter.showSunset(sunsetTv, isSunsetShown);
+        weatherPresenter.showSunset(sunsetLl, sunsetTv, isSunsetShown);
     }
 
     private void showLocation() {
