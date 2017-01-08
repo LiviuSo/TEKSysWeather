@@ -58,5 +58,8 @@
     <string name="pressure">Pressure</string>
     <string name="sunrise">Sunrise</string>
     <string name="sunset">Sunset</string>
+    <string name="tek_systems">TEK Systems</string>
+    <string name="current_weather">Current Weather</string>
+    <string name="measured_at">Measured at:</string>
 
 </resources>

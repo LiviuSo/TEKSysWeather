@@ -8,17 +8,20 @@
     android:layout_height="match_parent"
     tools:context="test.app.teksysweather.view.SplashActivity"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@color/sunshine_light_blue">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TEK Systems"
-        android:gravity="center"/>
+        android:text="@string/tek_systems"
+        android:gravity="center"
+        style="@style/TextAppearance.AppCompat.Medium"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Current Weather"
+        android:text="@string/current_weather"
         android:gravity="center"/>
 
 </LinearLayout>
