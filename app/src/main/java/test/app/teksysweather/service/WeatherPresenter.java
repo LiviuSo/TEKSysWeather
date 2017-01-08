@@ -1,14 +1,21 @@
 package test.app.teksysweather.service;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
+import test.app.teksysweather.R;
 import test.app.teksysweather.model.WeatherModel;
+import test.app.teksysweather.util.Constants;
 
 import static test.app.teksysweather.util.Constants.ICON_BASE_URL;
 
@@ -21,6 +28,9 @@ public class WeatherPresenter {
 
     public WeatherPresenter(WeatherModel weatherModel) {
         this.currentWeather = weatherModel;
+    }
+
+    public WeatherPresenter() {
     }
 
     public WeatherModel getCurrentWeather() {
@@ -36,7 +46,12 @@ public class WeatherPresenter {
             return;
         }
         String iconURL = String.format("%s%s.png", ICON_BASE_URL, currentWeather.weather.get(0).icon);
-        Picasso.with(iconIv.getContext()).load(iconURL).resize(100, 100).into(iconIv);
+        Picasso.with(iconIv.getContext())
+                .load(iconURL)
+                .resize(100, 100)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder).
+                into(iconIv);
     }
 
     public void showDescription(TextView descrTv) {
@@ -132,5 +147,26 @@ public class WeatherPresenter {
         } else {
             sunsetTv.setVisibility(View.GONE);
         }
+    }
+
+    public void saveModelToSharePref(Activity context) {
+        // 'serialize' the model
+        Gson gson = new Gson();
+        String modelAsString = gson.toJson(currentWeather);
+        SharedPreferences sharedPref = context.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Constants.SHARED_PREF_WEATHER_MODEL, modelAsString);
+        editor.apply();
+    }
+
+    public WeatherModel loadModelFromSharedPref(Activity context) {
+        // 'deserialize' the model
+        Gson gson = new Gson();
+        SharedPreferences sharedPref = context.getPreferences(Context.MODE_PRIVATE);
+        String currentWeatherAsString = sharedPref.getString(Constants.SHARED_PREF_WEATHER_MODEL, "");
+        if(!currentWeatherAsString.equals("")) {
+            currentWeather = gson.fromJson(currentWeatherAsString, WeatherModel.class);
+        }
+        return currentWeather;
     }
 }

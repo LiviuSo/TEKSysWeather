@@ -37,14 +37,16 @@ public class MainActivity extends AppCompatActivity {
     private WeatherModel     currentWeather;
     private WeatherPresenter weatherPresenter;
 
-    private boolean isWindShown;
-    private boolean isCloudsShown;
-    private boolean isHumidityShown;
-    private boolean isPressureShown;
-    private boolean isSunriseShown;
-    private boolean isSunsetShown;
-    private String  units;
-    private String  cityName;
+    // meant to be use when reading from Settings (not implemented yet)
+    private boolean isWindShown = true;
+    private boolean isCloudsShown = true;
+    private boolean isHumidityShown = true;
+    private boolean isPressureShown = true;
+    private boolean isSunriseShown = true;
+    private boolean isSunsetShown = true;
+
+    private String  units = "metric";
+    private String  cityName = "Detroit";
 
     @BindView(R.id.weatherRainContainer) protected     LinearLayout rainLl;
     @BindView(R.id.weatherSnowContainer) protected     LinearLayout snowLl;
@@ -90,8 +92,14 @@ public class MainActivity extends AppCompatActivity {
         // init ButterKnife
         ButterKnife.bind(this);
 
-        // set to 'visible' the optional items
-        readOptions();
+        // load from SharedPref
+        weatherPresenter = new WeatherPresenter();
+        weatherPresenter.loadModelFromSharedPref(this);
+        currentWeather = weatherPresenter.getCurrentWeather();
+
+        if(currentWeather != null) {
+            cityName = currentWeather.name;
+        }
     }
 
     @Override
@@ -121,13 +129,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.weatherSetting:
                 Log.v(LOG_TAG, "settings");
-//                Intent intent = new Intent(this, SettingsActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 break;
             default: return false;
         }
 
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        weatherPresenter.saveModelToSharePref(this);
     }
 
     @OnClick(R.id.weatherNewCity)
@@ -169,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
                         currentWeather = response.body();
-                        weatherPresenter = new WeatherPresenter(currentWeather);
+                        weatherPresenter.setCurrentWeather(currentWeather);
                         Log.v(LOG_TAG, "retrofit success!");
                         populateViews();
                     }
@@ -179,17 +193,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(LOG_TAG, "retrofit failure", t);
                     }
                 });
-    }
-
-    private void readOptions() {
-        isWindShown = true;
-        isCloudsShown = true;
-        isHumidityShown = true;
-        isPressureShown = true;
-        isSunriseShown = true;
-        isSunsetShown = true;
-        units = "metric";
-        cityName = "Laval";
     }
 
     private void populateViews() {
@@ -238,5 +241,4 @@ public class MainActivity extends AppCompatActivity {
             Log.e(LOG_TAG, "No activity to show the map");
         }
     }
-
 }
