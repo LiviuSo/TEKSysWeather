@@ -3,6 +3,7 @@ package test.app.teksysweather.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import test.app.teksysweather.R;
 import test.app.teksysweather.model.WeatherModel;
 import test.app.teksysweather.service.CurrentWeatherServiceProvider;
 import test.app.teksysweather.service.WeatherPresenter;
+import test.app.teksysweather.util.Utilities;
 
 import static test.app.teksysweather.util.Constants.BASE_URL;
 
@@ -37,17 +39,17 @@ public class MainActivity extends AppCompatActivity {
     private WeatherModel     currentWeather;
     private WeatherPresenter weatherPresenter;
 
-    // meant to be use when reading from Settings (not implemented yet)
-    private boolean isWindShown = true;
-    private boolean isCloudsShown = true;
+    // meant to reflect the settings (not implemented yet)
+    private boolean isWindShown     = true;
+    private boolean isCloudsShown   = true;
     private boolean isHumidityShown = true;
     private boolean isPressureShown = true;
-    private boolean isSunriseShown = true;
-    private boolean isSunsetShown = true;
+    private boolean isSunriseShown  = true;
+    private boolean isSunsetShown   = true;
+    private String  units           = "metric";
+    private String  cityName        = "Detroit"; // default
 
-    private String  units = "metric";
-    private String  cityName = "Detroit";
-
+    @BindView(R.id.activity_main) protected            LinearLayout parentView;
     @BindView(R.id.weatherRainContainer) protected     LinearLayout rainLl;
     @BindView(R.id.weatherSnowContainer) protected     LinearLayout snowLl;
     @BindView(R.id.weatherWindContainer) protected     LinearLayout windLl;
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         weatherPresenter.loadModelFromSharedPref(this);
         currentWeather = weatherPresenter.getCurrentWeather();
 
-        if(currentWeather != null) {
+        if (currentWeather != null) {
             cityName = currentWeather.name;
         }
     }
@@ -132,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-            default: return false;
+            default:
+                return false;
         }
 
         return true;
@@ -176,23 +179,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void fetchData() {
-        CurrentWeatherServiceProvider.getInstance(BASE_URL)
-                .getCurrentWeatherService()
-                .fetchCurrentWeather(cityName, units)
-                .enqueue(new Callback<WeatherModel>() {
-                    @Override
-                    public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
-                        currentWeather = response.body();
-                        weatherPresenter.setCurrentWeather(currentWeather);
-                        Log.v(LOG_TAG, "retrofit success!");
-                        populateViews();
-                    }
+        if (!Utilities.isNetworkAvailable(this)) {
+            populateViews(); // populate view using the model loaded offline
+            Snackbar.make(parentView, "You're offline", Snackbar.LENGTH_LONG).show();
+        } else {
+            CurrentWeatherServiceProvider.getInstance(BASE_URL)
+                    .getCurrentWeatherService()
+                    .fetchCurrentWeather(cityName, units)
+                    .enqueue(new Callback<WeatherModel>() {
+                        @Override
+                        public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
+                            if (response.code() == 200) {
+                                currentWeather = response.body();
+                                weatherPresenter.setCurrentWeather(currentWeather);
+                                Log.v(LOG_TAG, "retrofit success!");
+                                populateViews(); // populate the view using the model fetched from remote
+                            } else {
+                                Snackbar.make(parentView, "Some error occurred", Snackbar.LENGTH_LONG).show();
+                            }
+                        }
 
-                    @Override
-                    public void onFailure(Call<WeatherModel> call, Throwable t) {
-                        Log.d(LOG_TAG, "retrofit failure", t);
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<WeatherModel> call, Throwable t) {
+                            Log.d(LOG_TAG, "retrofit failure", t);
+                            Snackbar.make(parentView, "Some error occurred", Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+        }
     }
 
     private void populateViews() {

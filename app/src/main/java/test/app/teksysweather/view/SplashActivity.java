@@ -10,6 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import test.app.teksysweather.R;
 import test.app.teksysweather.model.WeatherModel;
+import test.app.teksysweather.util.Constants;
 import test.app.teksysweather.util.Utilities;
 
 public class SplashActivity extends AppCompatActivity {
@@ -23,8 +24,10 @@ public class SplashActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        boolean hasSp = Utilities.hasSavedSharedPref(this, Constants.SHARED_PREF_WEATHER_MODEL);
+
         // test if connected
-        if(!Utilities.isNetworkAvailable(this)) {
+        if(!Utilities.isNetworkAvailable(this) && !hasSp) {
             Snackbar.make(parentView, "You're offline. Connect and swipe!", Snackbar.LENGTH_LONG).show();
         } else {
             // online

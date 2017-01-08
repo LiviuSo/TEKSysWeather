@@ -1,9 +1,9 @@
 package test.app.teksysweather.service;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -153,7 +153,8 @@ public class WeatherPresenter {
         // 'serialize' the model
         Gson gson = new Gson();
         String modelAsString = gson.toJson(currentWeather);
-        SharedPreferences sharedPref = context.getPreferences(Context.MODE_PRIVATE);
+//        SharedPreferences sharedPref = context.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(Constants.SHARED_PREF_WEATHER_MODEL, modelAsString);
         editor.apply();
@@ -162,7 +163,8 @@ public class WeatherPresenter {
     public WeatherModel loadModelFromSharedPref(Activity context) {
         // 'deserialize' the model
         Gson gson = new Gson();
-        SharedPreferences sharedPref = context.getPreferences(Context.MODE_PRIVATE);
+//        SharedPreferences sharedPref = context.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String currentWeatherAsString = sharedPref.getString(Constants.SHARED_PREF_WEATHER_MODEL, "");
         if(!currentWeatherAsString.equals("")) {
             currentWeather = gson.fromJson(currentWeatherAsString, WeatherModel.class);
