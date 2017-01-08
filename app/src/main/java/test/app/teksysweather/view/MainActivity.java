@@ -86,11 +86,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("Current Weather");
-        }
-
         // init ButterKnife
         ButterKnife.bind(this);
 
@@ -107,8 +102,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        // read the settings
+        readSettings();
+
         // fetch data
         fetchData();
+    }
+
+    private void readSettings() {
+        if(Utilities.isMetric(this)) {
+            units = getString(R.string.pref_unit_metric);
+        } else {
+            units = getString(R.string.pref_unit_imperial);
+        }
     }
 
     @Override

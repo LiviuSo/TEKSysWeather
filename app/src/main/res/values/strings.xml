@@ -1,10 +1,6 @@
 <resources>
-    <string name="app_name">TEKSysWeather</string>
+    <string name="app_name">Current Weather</string>
     <string name="title_activity_settings">Settings</string>
-
-    <string name="pref_location_key" translatable="false">location_key</string>
-    <string name="pref_location_label">Location</string>
-    <string name="pref_location_default" translatable="false">94043</string>
 
     <string name="pref_unit_label">Unit</string>
     <string name="pref_unit_key" translatable="false">units</string>

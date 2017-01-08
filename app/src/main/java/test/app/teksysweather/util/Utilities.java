@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
+import test.app.teksysweather.R;
+
 /**
  * Class holding String, and time/date format utilities
  */
@@ -24,5 +26,12 @@ public class Utilities {
         String content = sharedPref.getString(key, "");
 
         return !content.equals("");
+    }
+
+    public static boolean isMetric(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getString(context.getString(R.string.pref_unit_key),
+                               context.getString(R.string.pref_unit_metric))
+                .equals(context.getString(R.string.pref_unit_metric));
     }
 }
