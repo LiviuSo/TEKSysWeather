@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
         boolean hasSp = Utilities.hasSavedSharedPref(this, Constants.SHARED_PREF_WEATHER_MODEL);
         // if not connected and no previous run (on-line), ask the user to connect
         if(!Utilities.isNetworkAvailable(this) && !hasSp) {
-            Snackbar.make(parentView, "You're offline. Connect and swipe!", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(parentView, R.string.offline_first_time, Snackbar.LENGTH_LONG).show();
         } else {
             // online
             Intent intent = new Intent(this, MainActivity.class);
@@ -56,7 +56,7 @@ public class SplashActivity extends AppCompatActivity {
                 if (Math.abs(deltaX) > MIN_DISTANCE) { // left or right swipe detected
                     // if connected, move to main activity
                     if(!Utilities.isNetworkAvailable(this)) {
-                        Snackbar.make(parentView, "You're offline. Connect and swipe!", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(parentView, R.string.offline_first_time, Snackbar.LENGTH_LONG).show();
                     } else {
                         // online
                         Intent intent = new Intent(this, MainActivity.class);

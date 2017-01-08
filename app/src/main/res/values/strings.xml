@@ -61,5 +61,6 @@
     <string name="tek_systems">TEK Systems</string>
     <string name="current_weather">Current Weather</string>
     <string name="measured_at">Measured at:</string>
+    <string name="offline_first_time">You\'re offline. Connect and swipe!</string>
 
 </resources>

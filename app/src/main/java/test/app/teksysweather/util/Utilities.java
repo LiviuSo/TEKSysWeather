@@ -13,7 +13,7 @@ import java.util.Locale;
 import test.app.teksysweather.R;
 
 /**
- * Class holding String, and time/date format utilities
+ * Class holding utilities to format Strings and time/date
  */
 public class Utilities {
 
