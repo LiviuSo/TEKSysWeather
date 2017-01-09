@@ -91,7 +91,7 @@ public class Utilities {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
 
-        return String.format(Locale.getDefault(), "%d:%d",
+        return String.format(Locale.getDefault(), "%d:%02d",
                              calendar.get(Calendar.HOUR),
                              calendar.get(Calendar.MINUTE));
     }

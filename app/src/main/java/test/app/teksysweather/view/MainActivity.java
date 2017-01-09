@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.weatherIcon) protected          ImageView iconIv;
     @BindView(R.id.weatherCityTv) protected        TextView  cityTv;
-    @BindView(R.id.weatherCountryTv) protected     TextView  countryTv;
     @BindView(R.id.weatherDescriptionTv) protected TextView  descriptionTv;
 
     @BindView(R.id.weatherHourTv) protected TextView hourTv;
@@ -216,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         // show icon
         weatherPresenter.showIcon(iconIv);
         // show location
-        weatherPresenter.showLocation(cityTv, countryTv);
+        weatherPresenter.showLocation(cityTv);
         // show description
         weatherPresenter.showDescription(descriptionTv);
         // show hour/date

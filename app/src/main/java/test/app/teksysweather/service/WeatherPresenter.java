@@ -43,7 +43,7 @@ public class WeatherPresenter {
         if (currentWeather.weather == null || currentWeather.weather.size() == 0) {
             return;
         }
-        String iconURL = String.format("%s%s.png", ICON_BASE_URL, currentWeather.weather.get(0).icon);
+        String iconURL = getIconURL();
         int width = (int) iconIv.getContext().getResources().getDimension(R.dimen.icon_width);
         int height = (int) iconIv.getContext().getResources().getDimension(R.dimen.icon_height);
         Picasso.with(iconIv.getContext())
@@ -58,12 +58,11 @@ public class WeatherPresenter {
         if (currentWeather.weather == null || currentWeather.weather.size() == 0) {
             return;
         }
-        descrTv.setText(Utilities.capitalizeFirstLetter(currentWeather.weather.get(0).description));
+        descrTv.setText(getDescription());
     }
 
-    public void showLocation(TextView cityTv, TextView countryTv) {
-        cityTv.setText(currentWeather.name);
-        countryTv.setText(currentWeather.sys.country);
+    public void showLocation(TextView locationTv) {
+        locationTv.setText(getLocation());
     }
 
     public void showTime(TextView hourTv, TextView amPmTv, TextView dateTv, TextView dayTv) {
@@ -75,19 +74,15 @@ public class WeatherPresenter {
 
     public void showTemperature(TextView tempMinTv, TextView tempTv, TextView tempMaxTv, boolean isMetric) {
         Context context = tempMinTv.getContext();
-        tempMinTv.setText(Utilities.formatTemperature(context, currentWeather.main.temp_min, isMetric));
-        tempTv.setText(Utilities.formatTemperature(context, currentWeather.main.temp, isMetric));
-        tempMaxTv.setText(Utilities.formatTemperature(context, currentWeather.main.temp_max, isMetric));
+        tempMinTv.setText(getMinTemp(context, isMetric));
+        tempTv.setText(getCurrentTemp(context, isMetric));
+        tempMaxTv.setText(getMaxTemp(context, isMetric));
     }
 
     public void showRain(LinearLayout container, TextView rainTv, boolean isMetric) {
         if (currentWeather.rain != null) {
             container.setVisibility(View.VISIBLE);
-            Context context = rainTv.getContext();
-            String unit = isMetric ? context.getString(R.string.millimeter) : context.getString(R.string.inch);
-            double quantity = isMetric ? currentWeather.rain.threeHours : 0.0393701 * currentWeather.rain.threeHours;
-            rainTv.setText(String.format(Locale.getDefault(), "%.1f %s", quantity, unit));
-
+            rainTv.setText(getRain(rainTv.getContext(), isMetric));
         } else {
             container.setVisibility(View.GONE);
         }
@@ -96,10 +91,7 @@ public class WeatherPresenter {
     public void showSnow(LinearLayout container, TextView snowTv, boolean isMetric) {
         if (currentWeather.snow != null) {
             container.setVisibility(View.VISIBLE);
-            Context context = snowTv.getContext();
-            String unit = isMetric ? context.getString(R.string.millimeter) : context.getString(R.string.inch);
-            double quantity = isMetric ? currentWeather.rain.threeHours : 0.0393701 * currentWeather.rain.threeHours;
-            snowTv.setText(String.format(Locale.getDefault(), "%.1f %s", quantity, unit));
+            snowTv.setText(getSnow(snowTv.getContext(), isMetric));
         } else {
             container.setVisibility(View.GONE);
         }
@@ -117,7 +109,7 @@ public class WeatherPresenter {
     public void showClouds(LinearLayout container, TextView cloudsTv, boolean isCloudsShown) {
         if (isCloudsShown && currentWeather.clouds != null) {
             container.setVisibility(View.VISIBLE);
-            cloudsTv.setText(String.format(Locale.getDefault(), "%d%%", currentWeather.clouds.all));
+            cloudsTv.setText(getClouds());
         } else {
             container.setVisibility(View.GONE);
         }
@@ -126,7 +118,7 @@ public class WeatherPresenter {
     public void showPressure(LinearLayout container, TextView pressureTv, boolean isPressureShown) {
         if (isPressureShown && currentWeather != null && currentWeather.main != null) {
             container.setVisibility(View.VISIBLE);
-            pressureTv.setText(String.format(Locale.getDefault(), "%d hPa", currentWeather.main.pressure));
+            pressureTv.setText(getPressure());
         } else {
             container.setVisibility(View.GONE);
         }
@@ -135,7 +127,7 @@ public class WeatherPresenter {
     public void showHumidity(LinearLayout container, TextView humidityTv, boolean isHumidityShown) {
         if (isHumidityShown && currentWeather.main != null) {
             container.setVisibility(View.VISIBLE);
-            humidityTv.setText(String.format(Locale.getDefault(), "%d%%", currentWeather.main.humidity));
+            humidityTv.setText(getHumidity());
         } else {
             container.setVisibility(View.GONE);
         }
@@ -144,7 +136,7 @@ public class WeatherPresenter {
     public void showSunrise(LinearLayout container, TextView sunriseTv, boolean isSunriseShown) {
         if (isSunriseShown && currentWeather.sys != null) {
             container.setVisibility(View.VISIBLE);
-            sunriseTv.setText(Utilities.getHour24(currentWeather.sys.sunrise * 1000));
+            sunriseTv.setText(getSunrise());
         } else {
             container.setVisibility(View.GONE);
         }
@@ -153,10 +145,77 @@ public class WeatherPresenter {
     public void showSunset(LinearLayout container, TextView sunsetTv, boolean isSunsetShown) {
         if (isSunsetShown && currentWeather.sys != null) {
             container.setVisibility(View.VISIBLE);
-            sunsetTv.setText(Utilities.getHour24(currentWeather.sys.sunset * 1000));
+            sunsetTv.setText(getSunset());
         } else {
             container.setVisibility(View.GONE);
         }
+    }
+
+    // wrapper of format utilities
+    public String getDescription() {
+        return Utilities.capitalizeFirstLetter(currentWeather.weather.get(0).description);
+    }
+
+    public String getLocation() {
+        return String.format(Locale.getDefault(), "%s %s", currentWeather.name, currentWeather.sys.country);
+    }
+
+    public String getIconURL() {
+        return String.format("%s%s.png", ICON_BASE_URL, currentWeather.weather.get(0).icon);
+    }
+
+    public String getCurrentTemp(Context context, boolean isMetric) {
+        return Utilities.formatTemperature(context, currentWeather.main.temp, isMetric);
+    }
+
+    public String getMinTemp(Context context, boolean isMetric) {
+        return Utilities.formatTemperature(context, currentWeather.main.temp_min, isMetric);
+    }
+
+    public String getMaxTemp(Context context, boolean isMetric) {
+        return Utilities.formatTemperature(context, currentWeather.main.temp_max, isMetric);
+    }
+
+    public String getMeasureHour12() {
+        return String.format(Locale.getDefault(), "%s %s",
+                             Utilities.getHour(currentWeather.dt * 1000),
+                             Utilities.getAmPm(currentWeather.dt * 1000));
+    }
+
+    public String getMeasureDate() {
+        return String.format(Locale.getDefault(), "%s", Utilities.getDate(currentWeather.dt * 1000));
+    }
+
+    public String getSnow(Context context, boolean isMetric) {
+        String unit = isMetric ? context.getString(R.string.millimeter) : context.getString(R.string.inch);
+        double quantity = isMetric ? currentWeather.rain.threeHours : 0.0393701 * currentWeather.rain.threeHours;
+        return String.format(Locale.getDefault(), "%.1f %s", quantity, unit);
+    }
+
+    public String getRain(Context context, boolean isMetric) {
+        String unit = isMetric ? context.getString(R.string.millimeter) : context.getString(R.string.inch);
+        double quantity = isMetric ? currentWeather.rain.threeHours : 0.0393701 * currentWeather.rain.threeHours;
+        return String.format(Locale.getDefault(), "%.1f %s", quantity, unit);
+    }
+
+    public String getClouds() {
+        return String.format(Locale.getDefault(), "%d%%", currentWeather.clouds.all);
+    }
+
+    public String getPressure() {
+        return String.format(Locale.getDefault(), "%d hPa", currentWeather.main.pressure);
+    }
+
+    public String getHumidity() {
+        return String.format(Locale.getDefault(), "%d%%", currentWeather.main.humidity);
+    }
+
+    public String getSunrise() {
+        return Utilities.getHour24(currentWeather.sys.sunrise * 1000);
+    }
+
+    public String getSunset() {
+        return Utilities.getHour24(currentWeather.sys.sunset * 1000);
     }
 
     public void saveModelToSharePref(Activity context) {
